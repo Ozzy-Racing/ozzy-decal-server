@@ -36,7 +36,7 @@ app.post('/trace', async (req, res) => {
     // 'detailed' favours cleaner, larger regions; 'fine' allows more
     // distinct colours through, matching the app's own naming.
     const colorPrecision = detailMode === 'fine' ? 7 : 6;
-    const filterSpeckle = detailMode === 'fine' ? 3 : 5;
+    const filterSpeckle = detailMode === 'fine' ? 6 : 8;
 
     const svg = await vectorize(buffer, {
       colorMode: ColorMode.Color,
@@ -49,7 +49,7 @@ app.post('/trace', async (req, res) => {
       layerDifference: 5,
       lengthThreshold: 5,
       maxIterations: 2,
-      pathPrecision: 5,
+      pathPrecision: 2,
     });
 
     res.json({ svg });
