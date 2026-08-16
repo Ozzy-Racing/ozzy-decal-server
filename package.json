@@ -1,0 +1,18 @@
+{
+  "name": "ozzy-decal-trace-server",
+  "version": "1.0.0",
+  "description": "Server-side high-quality vectorization for the Ozzy Decal Creator app, using VTracer",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5",
+    "@neplex/vectorizer": "^0.0.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
