@@ -32,7 +32,7 @@ app.post('/trace', async (req, res) => {
 
     const buffer = Buffer.from(imageBase64, 'base64');
 
-    const colorPrecision = detailMode === 'fine' ? 6 : 5;
+    const colorPrecision = detailMode === 'fine' ? 5 : 4;
     const filterSpeckle = detailMode === 'fine' ? 4 : 5;
 
     const svg = await vectorize(buffer, {
