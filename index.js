@@ -32,12 +32,8 @@ app.post('/trace', async (req, res) => {
 
     const buffer = Buffer.from(imageBase64, 'base64');
 
-    // Prioritising accuracy over file size for now — deliberately. File
-    // count/size is a separate, later problem (SVGs scale cleanly with no
-    // quality loss, so getting the trace genuinely accurate first is what
-    // actually matters before worrying about compression at all).
-    const colorPrecision = detailMode === 'fine' ? 9 : 8;
-    const filterSpeckle = detailMode === 'fine' ? 2 : 3;
+    const colorPrecision = detailMode === 'fine' ? 7 : 6;
+    const filterSpeckle = detailMode === 'fine' ? 4 : 5;
 
     const svg = await vectorize(buffer, {
       colorMode: ColorMode.Color,
