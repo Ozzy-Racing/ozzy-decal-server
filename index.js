@@ -33,14 +33,13 @@ app.post('/trace', async (req, res) => {
     const buffer = Buffer.from(imageBase64, 'base64');
 
     const colorPrecision = detailMode === 'fine' ? 5 : 4;
-    // Bumped from fine:4/detailed:5 — this is the one variable being
-    // tested this round. filterSpeckle drops small stray regions (tiny
-    // hair-strand tips, minor highlight flecks) during tracing itself,
-    // before any GT7 budget-splitting happens. Unlike colour quantization,
-    // this can't reassign a region's colour — it only decides whether a
-    // small region gets kept or dropped, so it's not a candidate for the
-    // "wrong colour on a real region" class of bug seen with palette work.
-    const filterSpeckle = detailMode === 'fine' ? 8 : 10;
+    // filterSpeckle round 2 — fine:4/detailed:5 -> fine:8/detailed:10 took
+    // this same test image from 346 files/4,194 colours down to 76
+    // files/656 colours with only a slight visible change (some fine
+    // hairline/highlight detail merged away, nothing structurally wrong).
+    // Pushing further to see where it starts costing real detail rather
+    // than just noise — still the one variable being tested.
+    const filterSpeckle = detailMode === 'fine' ? 16 : 20;
 
     const svg = await vectorize(buffer, {
       colorMode: ColorMode.Color,
