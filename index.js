@@ -47,13 +47,28 @@ app.post('/trace', async (req, res) => {
     // than just noise — still the one variable being tested.
     const filterSpeckle = detailMode === 'fine' ? 16 : 20;
 
+    // Switched from Stacked to Cutout — paired with a client-side change
+    // (pre-quantising the photo to a small flat palette before it's ever
+    // sent here). Stacked was the right choice for raw photos (avoids the
+    // seam/hole issues Cutout has on gradient-heavy content), but it makes
+    // later shapes able to depend on covering earlier ones — fine for
+    // photos, but it broke once the client started sending an
+    // already-flat, quantised image and the app's colour-merge step
+    // (groupSimilarHueColours) needed to consolidate same-coloured shapes
+    // that VTracer had drawn at very different depths. Cutout produces
+    // genuinely non-overlapping, order-independent tiles, which is a
+    // natural fit for a flat input with no gradients to worry about, and
+    // makes that merge step safe again. Verified against a real
+    // quantised+traced result before this went live: Stacked produced a
+    // large near-black shape covering most of the correct colour detail
+    // after merging; Cutout didn't.
     const svg = await vectorize(buffer, {
       colorMode: ColorMode.Color,
       colorPrecision,
       filterSpeckle,
       spliceThreshold: 45,
       cornerThreshold: 60,
-      hierarchical: Hierarchical.Stacked,
+      hierarchical: Hierarchical.Cutout,
       mode: PathSimplifyMode.Spline,
       layerDifference: 5,
       lengthThreshold: 5,
