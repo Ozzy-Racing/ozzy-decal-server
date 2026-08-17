@@ -32,7 +32,13 @@ app.post('/trace', async (req, res) => {
 
     const buffer = Buffer.from(imageBase64, 'base64');
 
-    const colorPrecision = detailMode === 'fine' ? 5 : 4;
+    // Dropped from fine:5/detailed:4 — the one variable being tested this
+    // round. This is VTracer's own native colour clustering, done before
+    // it decides on shape geometry at all, rather than us reconstructing
+    // colour logic by hand afterward (which caused real bugs three times
+    // running — see decalEngine.js history). Lower means fewer distinct
+    // colour clusters survive its own trace.
+    const colorPrecision = 3;
     // filterSpeckle round 2 — fine:4/detailed:5 -> fine:8/detailed:10 took
     // this same test image from 346 files/4,194 colours down to 76
     // files/656 colours with only a slight visible change (some fine
